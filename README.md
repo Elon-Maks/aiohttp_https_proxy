@@ -14,9 +14,9 @@ Usage
 To use this library import `HTTPSProxyConnector` and use it in `aiohttp.ClientSession`. 
 Then session can be used as any other aiohttp session:
 ```
-from aiohttp_https_proxy import ProxyConnector
+from aiohttp_https_proxy import HTTPSProxyConnector
 
-connector = ProxyConnector(proxy, limit=0)
+connector = HTTPSProxyConnector(proxy, limit=0)
     async with aiohttp.ClientSession(connector=connector) as session:
         async with session.get(url) as response:
         ...
