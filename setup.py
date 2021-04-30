@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='aiohttp-https-proxy',
+    name='aiohttp_https_proxy',
     version='0.1',
     description='allow http/https requests through https proxy for aiohttp library',
     long_description=open('README.md').read(),
@@ -13,13 +13,14 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
     ],
     keywords='aiohttp https-proxy',
-    url='https://github.com/Elon-Maks/aiohttp-https-proxy',
+    url='https://github.com/Elon-Maks/aiohttp_https_proxy',
     license='MIT',
     author='Maksym Sivolapov',
     packages=find_packages(),
     install_requires=[
         'aiohttp',
-        'yarl'
+        'yarl',
+        'uvloop'
     ],
     platforms='linux',
     include_package_data=True,
