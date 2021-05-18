@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='aiohttp_https_proxy',
-    version='0.1',
+    version='0.2',
     description='allow http/https requests through https proxy for aiohttp library',
     long_description=open('README.md').read(),
     classifiers=[

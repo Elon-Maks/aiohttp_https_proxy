@@ -27,6 +27,6 @@ connector = HTTPSProxyConnector(proxy, limit=0)
 `https://username:password@host:port`, or without `https://host:port`. `http` proxies also can be used.
 * `proxy_connection_timeout` - used to set wait time for response from proxy server to `CONNECT` request
   (10 seconds by default)
-* `insecure_requests` - used to allow connection to proxy server without SSL certificate verification.
+* `insecure_requests` - when set to `True` allows connection to proxy server without SSL certificate verification.
   Can be useful when using proxy servers that have no hostname, only ip. In most cases should be ok to use
   default value - `False`
