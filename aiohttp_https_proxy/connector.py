@@ -19,12 +19,14 @@ def parse_response(response_text):
 class HTTPSProxyConnector(TCPConnector):
     def __init__(
         self,
-        proxy_link,
-        proxy_connection_timeout = 10,
+        proxy_link: str,
+        proxy_connection_timeout: float = 10,
+        insecure_requests: bool = False,
         **kwargs
     ):
         super().__init__(**kwargs)
         parsed_link = urlparse(proxy_link)
+        self._insecure_requests = insecure_requests
         self._proxy_link = proxy_link
         self._proxy_type = parsed_link.scheme
         self._proxy_host = parsed_link.hostname
@@ -67,13 +69,16 @@ class HTTPSProxyConnector(TCPConnector):
     ):
         if self._proxy_type == 'https':
             loop = asyncio.get_running_loop()
-            context = ssl.SSLContext(ssl.PROTOCOL_TLS)
             if self._proxy_auth:
                 kwargs['req'].headers['Proxy-Authorization'] = self._proxy_auth
+            if self._insecure_requests:
+                proxy_context = ssl.SSLContext()
+            else:
+                proxy_context = ssl.create_default_context()
             transport, protocol = await loop.create_connection(protocol_factory,
                                                                host=self._proxy_host,
                                                                port=self._proxy_port,
-                                                               ssl=True)
+                                                               ssl=proxy_context)
             if kwargs.get('ssl'):
                 query = f'CONNECT {host}:{port} HTTP/1.1\r\n'
                 if self._proxy_auth:
@@ -88,6 +93,7 @@ class HTTPSProxyConnector(TCPConnector):
                 status, message = parse_response(protocol._tail)
                 if status != 200:
                     raise Exception(f'Proxy connection error: {status} "{message}"')
+                context = ssl.create_default_context()
                 transport = await loop.start_tls(transport, protocol, context)
                 protocol._tail = b''
                 protocol.transport = transport
