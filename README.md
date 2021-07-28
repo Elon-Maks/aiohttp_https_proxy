@@ -36,6 +36,6 @@ then `set_new_proxy` function can be used:
 ```
 session = aiohttp.ClientSession(connector=HTTPSProxyConnector(proxy_link, proxy_connection_timeout, insecure_requests))
 ...
-session.connector.set_proxy(proxy_link, proxy_connection_timeout, insecure_requests)
+session.connector.set_new_proxy(proxy_link, proxy_connection_timeout, insecure_requests)
 ```
 
