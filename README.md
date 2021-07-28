@@ -16,13 +16,13 @@ Then session can be used as any other aiohttp session:
 ```
 from aiohttp_https_proxy import HTTPSProxyConnector
 
-connector = HTTPSProxyConnector(proxy, limit=0)
+connector = HTTPSProxyConnector(proxy_link, proxy_connection_timeout, insecure_requests)
     async with aiohttp.ClientSession(connector=connector) as session:
         async with session.get(url) as response:
         ...
 ```
 
-`HTTPSProxyConnector` inherits `TCPConnector` and has two additional parameters:
+`HTTPSProxyConnector` inherits `TCPConnector` and has three additional parameters:
 * `proxy_link` - used to pass link to proxy server. It can be with credentials in format
 `https://username:password@host:port`, or without `https://host:port`. `http` proxies also can be used.
 * `proxy_connection_timeout` - used to set wait time for response from proxy server to `CONNECT` request
@@ -30,3 +30,12 @@ connector = HTTPSProxyConnector(proxy, limit=0)
 * `insecure_requests` - when set to `True` allows connection to proxy server without SSL certificate verification.
   Can be useful when using proxy servers that have no hostname, only ip. In most cases should be ok to use
   default value - `False`
+  
+If there is a need to update proxy in context of current session (without creating a new one),
+then `set_new_proxy` function can be used:
+```
+session = aiohttp.ClientSession(connector=HTTPSProxyConnector(proxy_link, proxy_connection_timeout, insecure_requests))
+...
+session.connector.set_proxy(proxy_link, proxy_connection_timeout, insecure_requests)
+```
+

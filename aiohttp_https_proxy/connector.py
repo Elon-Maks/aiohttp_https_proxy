@@ -47,6 +47,24 @@ class HTTPSProxyConnector(TCPConnector):
         except ImportError:
             raise Exception('uvloop is required to use this connector')
 
+    def set_new_proxy(self, proxy_link: str,
+                      proxy_connection_timeout: float = 10,
+                      insecure_requests: bool = False):
+        parsed_link = urlparse(proxy_link)
+        self._insecure_requests = insecure_requests
+        self._proxy_link = proxy_link
+        self._proxy_type = parsed_link.scheme
+        self._proxy_host = parsed_link.hostname
+        self._proxy_username = unquote(parsed_link.username) if parsed_link.username else None
+        self._proxy_password = unquote(parsed_link.password) if parsed_link.password else None
+        self._proxy_connection_timeout = proxy_connection_timeout
+        if parsed_link.username and parsed_link.password:
+            self._proxy_auth = 'Basic ' + (base64.standard_b64encode(f'{self._proxy_username}:'
+                                                                     f'{self._proxy_password}'.encode('latin1')
+                                                                     ).decode('latin1'))
+        else:
+            self._proxy_auth = None
+        self._proxy_port = parsed_link.port
 
     @property
     def proxy_url(self):
