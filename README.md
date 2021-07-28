@@ -34,8 +34,10 @@ connector = HTTPSProxyConnector(proxy_link, proxy_connection_timeout, insecure_r
 If there is a need to update proxy in context of current session (without creating a new one),
 then `set_new_proxy` function can be used:
 ```
-session = aiohttp.ClientSession(connector=HTTPSProxyConnector(proxy_link, proxy_connection_timeout, insecure_requests))
+connector = HTTPSProxyConnector(proxy_link, proxy_connection_timeout, insecure_requests, force_close=True)
+session = aiohttp.ClientSession(connector=connector))
 ...
 session.connector.set_new_proxy(proxy_link, proxy_connection_timeout, insecure_requests)
 ```
-
+***Important:*** `force_close` for connector should be set to `True` if `set_new_proxy`
+is used, else connection will not be updated and same proxy will be used.
